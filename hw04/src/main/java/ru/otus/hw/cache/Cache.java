@@ -38,11 +38,11 @@ public class Cache<K,V>  {
     private void processQueue() {
         Reference<? extends Pair<K,V>> sv = null;
         while ((sv = queue.poll()) != null) {
-            hash.remove(Objects.requireNonNull(sv.get()).key()); // we can access private data!
+            hash.remove(Objects.requireNonNull(sv.get()).key());
         }
     }
     public K put(K key, V value) {
-        processQueue(); // throw out garbage collected values first
+        processQueue();
         var pair = new Pair<K,V>(key, value);
         var ref= hash.put(key, new SoftReference<>(pair, queue) );
         return ref == null? null : Objects.requireNonNull(Objects.requireNonNull(ref).get()).key;
